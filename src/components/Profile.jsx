@@ -102,7 +102,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="profile-page pt-80">
+    <div className="profile-page pt-80 bg-index">
       {/* {loading && <Loader />} */}
       <div className="checkout-sign">
         <div className="container">
@@ -168,7 +168,7 @@ const Profile = () => {
                       >
                         {/* Image */}
                         <img
-                          src={`${image_url}/${imagePreview}`}
+                          src="/public/images/graduate_4465457.png"
                           alt="profile"
                           style={{
                             width: "100%",
@@ -182,8 +182,8 @@ const Profile = () => {
                         <div
                           style={{
                             position: "absolute",
-                            bottom: "6px",
-                            right: "6px",
+                            bottom: "20px",
+                            right: "15px",
                             width: "34px",
                             height: "34px",
                             backgroundColor: "white",

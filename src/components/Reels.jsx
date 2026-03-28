@@ -40,7 +40,7 @@ const Reels = () => {
 {allReels.length>0 && (
 <div class="common-sec">
     <h2 class="title">Our <span> Watch and Buy </span></h2>
-    <p class="sub">Discover the magic of exquisite jewels that celebrate your special day with our endless love! </p>
+     <p class="sub">Spot what you like and buy! </p>
 </div>
 )
 }

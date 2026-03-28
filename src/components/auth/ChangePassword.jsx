@@ -88,8 +88,8 @@ const ChangePassword = () => {
                   onClick={() => setShowOldPassword(!showOldPassword)}
                   style={{
                     position: "absolute",
-                    right: "10px",
-                    top: "38px",
+                    right: "5px",
+                    top: "45px",
                     cursor: "pointer",
                     fontSize: "14px",
                     color: "#666",
@@ -123,8 +123,8 @@ const ChangePassword = () => {
                   onClick={() => setShowNewPassword(!showNewPassword)}
                   style={{
                     position: "absolute",
-                    right: "10px",
-                    top: "38px",
+                    right: "5px",
+                    top: "45px",
                     cursor: "pointer",
                     fontSize: "14px",
                     color: "#666",
@@ -158,8 +158,8 @@ const ChangePassword = () => {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   style={{
                     position: "absolute",
-                    right: "10px",
-                    top: "38px",
+                    right: "5px",
+                    top: "45px",
                     cursor: "pointer",
                     fontSize: "14px",
                     color: "#666",
