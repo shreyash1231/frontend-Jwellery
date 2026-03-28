@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+  font-family: sans-serif;
 }
 
 /* Match footer color below the fold so no white strip at bottom */
@@ -4855,7 +4855,7 @@ a {
 }
 
 .signin-form-page .detail-grid-1 {
-  padding: 0;
+  padding: 35px;
   background: white !important;
 }
 .signin-page.full-bg {
@@ -4883,7 +4883,7 @@ a {
 }
 
 .signin-form-page .detail-grid-1 {
-  padding: 0;
+  padding: 35px;
   background: white !important;
 }
 
@@ -6136,12 +6136,14 @@ table {
 }
 
 .bg-index {
-  background: 
+  background-image: 
     linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)),
     url("../images/slider.png");
   background-repeat: no-repeat;
-  background-size: 100% 100%;
-  background-position: center;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 .pb-30 {
