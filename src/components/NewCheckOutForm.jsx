@@ -23,6 +23,9 @@ const NewCheckOutForm = () => {
   const toast = useToast();
 
   // ---------------- COUPON STATE ----------------
+  const [allCoupons, setAllCoupons] = useState([]);
+  const [couponsLoading, setCouponsLoading] = useState(false);
+  const [showCouponDropdown, setShowCouponDropdown] = useState(false); 
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [discount, setDiscount] = useState(0);
@@ -79,6 +82,27 @@ const NewCheckOutForm = () => {
     }
   };
 
+const fetchAllCoupons = async () => {
+  setCouponsLoading(true);
+  try {
+    const token = sessionStorage.getItem("userLoggedIn"); // ✅ changed from "userLoggedIn" to "token"
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}get-all-user-coupons`, {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await res.json();
+    if (data?.success) {
+      setAllCoupons(data.data || []);
+    }
+  } catch (error) {
+    console.error("Error fetching coupons:", error);
+  } finally {
+    setCouponsLoading(false);
+  }
+};
+
   useEffect(() => {
     if (!selectedProducts.length) {
       navigate("/", { replace: true });
@@ -87,6 +111,7 @@ const NewCheckOutForm = () => {
 
   useEffect(() => {
     fetchAddresses();
+     fetchAllCoupons();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -95,6 +120,11 @@ const NewCheckOutForm = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleSelectCoupon = (coupon) => {
+  setCouponCode(coupon.code);
+  setShowCouponDropdown(false);
+  setCouponError("");
+};
   // ---------------- SAVE / UPDATE ADDRESS & PLACE ORDER ----------------
   const handleSaveAndContinue = async () => {
     const isLoggedIn = sessionStorage.getItem("userLoggedIn") !== null;
@@ -474,23 +504,108 @@ const NewCheckOutForm = () => {
                     </div>
                   ) : (
                     <>
-                      <input
-                        type="text"
-                        className="discount-code-input"
-                        placeholder="Discount code"
-                        value={couponCode}
-                        onChange={(e) => {
-                          setCouponCode(e.target.value);
-                          setCouponError("");
-                        }}
-                      />
-                      <button
-                        className="apply-discount-btn"
-                        onClick={handleApplyCoupon}
-                        disabled={couponLoading}
-                      >
-                        {couponLoading ? "Applying..." : "Apply"}
-                      </button>
+                      {/* REPLACE this existing block ↓ */}
+{/* <input ... discount-code-input /> */}
+{/* <button ... apply-discount-btn /> */}
+
+{/* WITH this ↓ */}
+<div style={{ position: "relative", flex: 1 }}>
+  <input
+    type="text"
+    className="discount-code-input"
+    placeholder="Discount code"
+    value={couponCode}
+    onChange={(e) => {
+      setCouponCode(e.target.value);
+      setCouponError("");
+    }}
+    style={{ width: "100%", paddingRight: "36px" }}
+  />
+  <button
+    type="button"
+    onClick={() => setShowCouponDropdown((prev) => !prev)}
+    style={{
+      position: "absolute",
+      right: "8px",
+      top: "50%",
+      transform: "translateY(-50%)",
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      color: "#555",
+      fontSize: "14px",
+      padding: "4px",
+    }}
+  >
+    <i className={`fa-solid fa-chevron-${showCouponDropdown ? "up" : "down"}`}></i>
+  </button>
+
+  {showCouponDropdown && (
+    <div
+      style={{
+        position: "absolute",
+        top: "calc(100% + 4px)",
+        left: 0,
+        right: 0,
+        background: "#fff",
+        border: "1px solid #ddd",
+        borderRadius: "8px",
+        boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
+        zIndex: 999,
+        maxHeight: "220px",
+        overflowY: "auto",
+      }}
+    >
+      {couponsLoading ? (
+        <div style={{ padding: "14px", textAlign: "center", color: "#888", fontSize: "13px" }}>
+          Loading coupons...
+        </div>
+      ) : allCoupons.length === 0 ? (
+        <div style={{ padding: "14px", textAlign: "center", color: "#888", fontSize: "13px" }}>
+          No coupons available
+        </div>
+      ) : (
+        allCoupons.map((coupon) => (
+          <div
+            key={coupon._id || coupon.code}
+            onClick={() => handleSelectCoupon(coupon)}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "10px 14px",
+              cursor: "pointer",
+              borderBottom: "1px solid #f0f0f0",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#f7f7f7")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+          >
+            <div>
+              <div style={{ fontWeight: 600, fontSize: "13px", color: "#222" }}>
+                {coupon.code}
+              </div>
+              {coupon.description && (
+                <div style={{ fontSize: "11px", color: "#888", marginTop: "2px" }}>
+                  {coupon.description}
+                </div>
+              )}
+            </div>
+            <div style={{ fontWeight: 700, fontSize: "13px", color: "#28a745", marginLeft: "12px" }}>
+              {coupon.type === "PERCENTAGE" ? `${coupon.value}% off` : `₹${coupon.value} off`}
+            </div>
+          </div>
+        ))
+      )}
+    </div>
+  )}
+</div>
+<button
+  className="apply-discount-btn"
+  onClick={handleApplyCoupon}
+  disabled={couponLoading}
+>
+  {couponLoading ? "Applying..." : "Apply"}
+</button>
                     </>
                   )}
                 </div>
